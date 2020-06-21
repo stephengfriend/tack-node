@@ -1,0 +1,11 @@
+{
+	"baseUrl": "http://localhost:3000",
+	"fileServerFolder": "__e2e__/",
+	"fixturesFolder": "__e2e__/fixtures",
+	"integrationFolder": "__e2e__/integration",
+	"pluginsFile": "__e2e__/plugins/index.js",
+	"projectId": "rqc2gc",
+	"screenshotsFolder": ".cypress/screenshots",
+	"supportFile": "__e2e__/support/index.js",
+	"videosFolder": ".cypress/videos"
+}
