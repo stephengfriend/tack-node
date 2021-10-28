@@ -1,0 +1,50 @@
+{
+	"name": "tack",
+	"dockerComposeFile": "../.docker/docker-compose.yml",
+	"service": "next",
+	"workspaceFolder": "/home/node/tack",
+	"forwardPorts": [3000, "pg:5432", "redis:6379"],
+	"settings": {
+		"terminal.integrated.profiles.linux": {
+			"zsh": {
+				"path": "/bin/zsh",
+				"args": ["-l"]
+			}
+		},
+		"terminal.integrated.defaultProfile.linux": "zsh",
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "pg",
+				"port": 5432,
+				"name": "Container database",
+				"driver": "PostgreSQL",
+				"database": "postgres",
+				"username": "postgres",
+				"password": "postgres"
+			}
+		],
+		"vscode-redis-connection-config": [
+			{
+				"host": "redis",
+				"port": "6379"
+			}
+		],
+		"files.eol": "\n",
+		"files.insertFinalNewline": true,
+		"files.trimFinalNewlines": true,
+		"files.trimTrailingWhitespace": true,
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true
+		}
+	},
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"Dunn.redis",
+		"mtxr.sqltools",
+		"mtxr.sqltools-driver-pg",
+		"wix.vscode-import-cost",
+		"esbenp.prettier-vscode"
+	]
+}

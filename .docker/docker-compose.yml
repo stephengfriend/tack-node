@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  next:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        NODE_ENV: development
+    environment:
+      - SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"
+    user: 'node:node'
+    volumes:
+      - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}
+      - ..:/home/node/tack:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    links:
+      - 'pg'
+      - 'redis'
+    ports:
+      - '3000'
+
+  pg:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432'
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - '6379'
+
+# Persist database information after your VM shuts down (just these two lines!)
+volumes:
+  postgres_data:
