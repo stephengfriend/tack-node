@@ -1,0 +1,5 @@
+name: Tack Ingest Workflow
+on:
+  schedule:
+    - cron: '0 2,8,14,20 * * *'
+jobs:

@@ -1,0 +1,64 @@
+type Query {
+	allEngines: [Engine!]
+	allLocations: [Location!]
+	allReservations: [Reservation!]
+	allVessels: [Vessel!]
+
+	vesselsByLocation: [Vessel!]
+	reservationsByLocation(location: Int): [Reservation!]
+	reservationsByVessel(location: Int): [Reservation!]
+}
+
+type Reservation {
+	date: Date!
+	location: Location! @relation
+	vessel: Vessel! @relation
+	isAvailable: Boolean!
+	begin: Time!
+	end: Time!
+}
+
+type Contact @embedded {
+	address: String
+	phone: String
+}
+
+type Location {
+	number: Int! @unique
+	name: String!
+	contact: Contact
+	vessels: [Vessel!] @relation
+	reservations: [Reservation!] @relation
+}
+
+type Vessel {
+	number: Int! @unique
+	name: String!
+	location: Location! @relation
+	reservations: [Reservation!] @relation
+	length: Float!
+	manufacturer: String!
+	hull: Hull!
+	engine: Engine! @relation
+	isCenterConsole: Boolean!
+	isInflated: Boolean!
+}
+
+type Engine {
+	manufacturer: EngineManufacturer!
+	hp: Int
+}
+
+enum EngineManufacturer {
+	YAMAHA
+	MERCURY
+	UNKNOWN
+}
+
+enum Hull {
+	PONTOON
+	DECK
+	DEEP
+	SAIL
+	SKIFF
+}

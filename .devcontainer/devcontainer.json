@@ -4,6 +4,7 @@
 	"service": "next",
 	"workspaceFolder": "/home/node/tack",
 	"forwardPorts": [3000, "pg:5432", "redis:6379"],
+	"remoteEnv": { "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}" },
 	"settings": {
 		"terminal.integrated.profiles.linux": {
 			"zsh": {

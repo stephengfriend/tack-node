@@ -1,0 +1,15 @@
+{
+    "name": "Tack",
+    "short_name": "Tack",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#2b5797",
+    "background_color": "#2b5797",
+    "display": "standalone",
+    "orientation": "portrait"
+}

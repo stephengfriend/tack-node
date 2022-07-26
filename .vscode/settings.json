@@ -1,0 +1,17 @@
+{
+	"files.watcherExclude": {
+		"**/target": true
+	},
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "pg",
+			"port": 5432,
+			"name": "Container database",
+			"driver": "PostgreSQL",
+			"database": "postgres",
+			"username": "postgres",
+			"password": "postgres"
+		}
+	]
+}
