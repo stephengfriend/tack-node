@@ -1,4 +1,5 @@
 import { Command, Flags } from '@oclif/core'
+import { add, nextSaturday, nextSunday } from 'date-fns'
 
 import Debug from '../../debug'
 import FBC, { Location, Vessel } from '../../fbc-client'
@@ -36,16 +37,39 @@ export default class Vessels extends Command {
 			locations = locations.filter(({ id }) => id === flags.location)
 		}
 
+		const now = new Date()
+		const dates = [
+			nextSaturday(now),
+			nextSunday(now),
+			add(nextSaturday(now), { weeks: 1 }),
+			add(nextSunday(now), { weeks: 1 }),
+			add(nextSaturday(now), { weeks: 2 }),
+			add(nextSunday(now), { weeks: 2 }),
+			add(nextSaturday(now), { weeks: 3 }),
+			add(nextSunday(now), { weeks: 3 }),
+			add(nextSaturday(now), { weeks: 4 }),
+			add(nextSunday(now), { weeks: 4 }),
+		]
+
 		for (let i = 0; i < locations.length; i++) {
 			const { id } = locations[i]
 
-			let vessels = (
-				await fbc.getVesselsByLocation({
-					locationId: id,
-				})
-			).filter(({ hasAvailability }) => {
-				return hasAvailability
-			})
+			let vessels: Vessel[] = []
+
+			for (const date of dates) {
+				vessels = vessels.concat(
+					await fbc
+						.getVesselsByLocation({
+							locationId: id,
+							date,
+						})
+						.then((vessels) => {
+							return vessels.filter(({ hasAvailability }) => {
+								return hasAvailability
+							})
+						}),
+				)
+			}
 
 			locations[i] = { ...locations[i], vessels }
 		}
