@@ -2,7 +2,7 @@ import { Command, Flags } from '@oclif/core'
 import { add, nextSaturday, nextSunday } from 'date-fns'
 
 import Debug from '../../debug'
-import FBC, { Location, Vessel } from '../../fbc-client'
+import FBC, { Availability, Location, Reservation, Vessel } from '../../fbc-client'
 
 const debug = Debug('fbc')
 
@@ -10,7 +10,7 @@ export default class Vessels extends Command {
 	static description = 'Fetch a list of vessels by location'
 	static flags = { location: Flags.integer({ required: false }) }
 
-	async run(): Promise<Location[]> {
+	async run(): Promise<Reservation[][]> {
 		if (!process.env.FBC_USERNAME || !process.env.FBC_PASSWORD) {
 			console.log('username:', process.env.FBC_USERNAME)
 			console.log('password:', process.env.FBC_PASSWORD)
@@ -40,38 +40,43 @@ export default class Vessels extends Command {
 		const now = new Date()
 		const dates = [
 			nextSaturday(now),
-			nextSunday(now),
-			add(nextSaturday(now), { weeks: 1 }),
-			add(nextSunday(now), { weeks: 1 }),
-			add(nextSaturday(now), { weeks: 2 }),
-			add(nextSunday(now), { weeks: 2 }),
-			add(nextSaturday(now), { weeks: 3 }),
-			add(nextSunday(now), { weeks: 3 }),
-			add(nextSaturday(now), { weeks: 4 }),
-			add(nextSunday(now), { weeks: 4 }),
+			// nextSunday(now),
+			// add(nextSaturday(now), { weeks: 1 }),
+			// add(nextSunday(now), { weeks: 1 }),
+			// add(nextSaturday(now), { weeks: 2 }),
+			// add(nextSunday(now), { weeks: 2 }),
+			// add(nextSaturday(now), { weeks: 3 }),
+			// add(nextSunday(now), { weeks: 3 }),
+			// add(nextSaturday(now), { weeks: 4 }),
+			// add(nextSunday(now), { weeks: 4 }),
 		]
 
-		for (let i = 0; i < locations.length; i++) {
-			const { id } = locations[i]
+    let byLocation: Reservation[][] = [];
 
-			let vessels: Vessel[] = []
+		for (let i = 0; i < locations.length; i++) {
+			const { id: locationId } = locations[i]
+
+			let reservations: Reservation[] = []
 
 			for (const date of dates) {
-				vessels = vessels.concat(
+				reservations = reservations.concat(
 					await fbc
-						.getVesselsByLocation({
-							locationId: id,
+						.getReservationsByLocation({
+							locationId,
 							date,
 						})
-						.then((vessels) => {
-							return vessels.filter(({ hasAvailability }) => {
-								return hasAvailability
-							})
+						.then((reservation) => {
+							return reservation.filter((reservation) => {
+                console.log(reservation)
+								return reservation.availability !== Availability.NONE
+							}).map((reservation) => {
+                return new Reservation(locations.filter(({ id }) => id === locationId)[0], reservation.vessel, reservation.date, reservation.availability);
+              })
 						}),
 				)
 			}
 
-			locations[i] = { ...locations[i], vessels }
+			byLocation.push(reservations)
 		}
 
 		// const vesselsWithAvailabilities = await Promise.all(
@@ -91,12 +96,12 @@ export default class Vessels extends Command {
 
 		this.log(
 			JSON.stringify(
-				locations.filter(({ vessels }) => vessels?.length),
+				byLocation,
 				null,
 				2,
 			),
 		)
 
-		return locations
+		return byLocation;
 	}
 }
