@@ -169,7 +169,7 @@
 		"@opentelemetry/sdk-node": "^0.26.0",
 		"@stitches/react": "^1.2.5",
 		"@xstate/react": "^1.6.1",
-		"apollo-server-core": "^3.4.0",
+		"apollo-server-core": "^3.10.1",
 		"apollo-server-micro": "^3.4.0",
 		"cache-manager": "^4.1.0",
 		"cache-manager-fs-hash": "^1.0.0",
